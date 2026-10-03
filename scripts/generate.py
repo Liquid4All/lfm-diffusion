@@ -13,7 +13,7 @@ def main():
     group.add_argument("--nfe", type=int, choices=[32, 8, 4], default=8,
                        help="denoising steps per 32-token block (shipped presets)")
     group.add_argument("--config", help="path to a decode config YAML")
-    p.add_argument("--prompt", default="What is C. elegans?")
+    p.add_argument("--prompt", default="Give three tips for getting better sleep.")
     p.add_argument("--system", default=None)
     p.add_argument("--max-new-tokens", type=int, default=256)
     p.add_argument("--seed", type=int, default=0)

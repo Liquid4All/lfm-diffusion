@@ -37,7 +37,7 @@ Decoding parameters (rho schedule, temperature anneal, sigma floor) are set by t
 ```bash
 curl http://localhost:30000/v1/chat/completions -H "Content-Type: application/json" -d '{
   "model": "LiquidAI/lfm2.5-350m-diffusion-exp",
-  "messages": [{"role": "user", "content": "What is C. elegans?"}],
+  "messages": [{"role": "user", "content": "Give three tips for getting better sleep."}],
   "max_tokens": 256
 }'
 ```

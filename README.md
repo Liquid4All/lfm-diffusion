@@ -31,14 +31,14 @@ uv sync --extra rocm   # AMD
 **PyTorch** (reference implementation, any GPU):
 
 ```bash
-uv run scripts/generate.py --prompt "What is C. elegans?" --nfe 8
+uv run scripts/generate.py --prompt "Give three tips for getting better sleep." --nfe 8
 ```
 
 ```python
 from lfm_diffusion import generate, load_model
 
 model, tokenizer = load_model("LiquidAI/lfm2.5-350m-diffusion-exp")
-messages = [{"role": "user", "content": "What is C. elegans?"}]
+messages = [{"role": "user", "content": "Give three tips for getting better sleep."}]
 print(generate(model, tokenizer, messages, config="nfe8", max_new_tokens=256))
 ```
 
