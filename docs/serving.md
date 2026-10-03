@@ -16,7 +16,7 @@ mv python/pyproject_other.toml python/pyproject.toml && pip install -e "python[a
 Run from the `lfm-diffusion` checkout, which holds the launch script and the decode configs:
 
 ```bash
-cd lfm-diffusion
+cd /path/to/lfm-diffusion   # not the sglang-diffusion-lfm checkout
 bash scripts/serve_sglang.sh nfe8              # throughput: batching up to 32 requests
 MODE=latency bash scripts/serve_sglang.sh nfe8 # single request, commit fusion
 ```
