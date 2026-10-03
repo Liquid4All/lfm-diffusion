@@ -7,7 +7,7 @@ which adds the `DuoBlock` algorithm with fused kernels, CUDA graphs and continuo
 
 ```bash
 git clone https://github.com/Liquid4All/sglang-diffusion-lfm && cd sglang-diffusion-lfm
-pip install -e "python"                                                         # NVIDIA
+SGLANG_BUILD_RUST_EXTS=none pip install -e "python"                             # NVIDIA
 mv python/pyproject_other.toml python/pyproject.toml && pip install -e "python[all_hip]"   # AMD
 ```
 
@@ -56,5 +56,7 @@ Decode speedup over autoregressive LFM2.5-350M at batch size 1 (1024-token promp
 | B200 | 0.75× | 1.38× | 2.47× | 4.07× |
 | MI325X | 0.78× | 1.50× | 2.81× | 4.98× |
 
-The advantage is a low-batch effect: every denoising step evaluates the whole block, so throughput falls below
-autoregressive decoding as concurrency grows.
+Median of 5 machines per GPU, with the autoregressive model and the diffusion model measured back to back on the
+same machine. The autoregressive baseline uses its fastest SGLang configuration (CUDA graphs and continuous decode
+steps; `SGLANG_USE_AITER=1` on MI325X). B200 and H100: 32 pinned CPU cores; MI325X: 14 cores. Autoregressive
+decoding at batch size 1 is bound by the host CPU, so on slower CPUs the speedup is larger.
