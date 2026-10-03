@@ -13,7 +13,10 @@ mv python/pyproject_other.toml python/pyproject.toml && pip install -e "python[a
 
 ## Launch
 
+Run from the `lfm-diffusion` checkout, which holds the launch script and the decode configs:
+
 ```bash
+cd lfm-diffusion
 bash scripts/serve_sglang.sh nfe8              # throughput: batching up to 32 requests
 MODE=latency bash scripts/serve_sglang.sh nfe8 # single request, commit fusion
 ```
@@ -21,12 +24,13 @@ MODE=latency bash scripts/serve_sglang.sh nfe8 # single request, commit fusion
 Equivalent command (throughput mode):
 
 ```bash
+SGLANG_DLLM_PREFILL_BATCH=4 SGLANG_DLLM_PREFILL_MAX_WAIT_MS=10 \
 python -m sglang.launch_server --model-path LiquidAI/lfm2.5-350m-diffusion-exp --trust-remote-code \
   --dllm-algorithm DuoBlock --dllm-algorithm-config lfm_diffusion/decode_configs/nfe8.yaml \
   --dllm-prefix-attention causal --attention-backend triton --no-dllm-fdfo \
   --dllm-cuda-graph --cuda-graph-backend-decode full --cuda-graph-max-bs-decode 32 \
-  --max-running-requests 32 --disable-radix-cache --dtype bfloat16 \
-  --tool-call-parser lfm2 --port 30000
+  --max-running-requests 32 --disable-radix-cache --dtype bfloat16 --mem-fraction-static 0.85 \
+  --tokenizer-worker-num 4 --tool-call-parser lfm2 --port 30000
 ```
 
 Decoding parameters (rho schedule, temperature anneal, sigma floor) are set by the server config. Per request,

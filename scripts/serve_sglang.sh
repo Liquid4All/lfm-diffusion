@@ -9,9 +9,9 @@ CONFIG="$(cd "$(dirname "$0")/.." && pwd)/lfm_diffusion/decode_configs/${PRESET}
 if [[ "${MODE:-throughput}" == "latency" ]]; then
   FUSED="$(mktemp --suffix .yaml)"
   cat "$CONFIG" > "$FUSED" && echo "commit_fusion: true" >> "$FUSED"
-  CONFIG="$FUSED"; MAX_RUNNING=1
+  CONFIG="$FUSED"; MAX_RUNNING=1; EXTRA=()
 else
-  MAX_RUNNING=32
+  MAX_RUNNING=32; EXTRA=(--tokenizer-worker-num 4)
   export SGLANG_DLLM_PREFILL_BATCH=4 SGLANG_DLLM_PREFILL_MAX_WAIT_MS=10
 fi
 
@@ -20,4 +20,4 @@ exec python -m sglang.launch_server --model-path "$MODEL" --trust-remote-code \
   --dllm-prefix-attention causal --attention-backend triton --no-dllm-fdfo \
   --dllm-cuda-graph --cuda-graph-backend-decode full --cuda-graph-max-bs-decode 32 \
   --max-running-requests "$MAX_RUNNING" --disable-radix-cache --dtype bfloat16 \
-  --mem-fraction-static 0.85 --tool-call-parser lfm2 --port "$PORT"
+  --mem-fraction-static 0.85 --tool-call-parser lfm2 --port "$PORT" "${EXTRA[@]}"
