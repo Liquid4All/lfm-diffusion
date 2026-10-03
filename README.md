@@ -68,7 +68,7 @@ See [docs/evaluation.md](docs/evaluation.md) to evaluate the model through the S
 @inproceedings{tafreshi2026blockdiffusion,
   title     = {From Autoregression to Block Diffusion: Adapting Language Models for Efficient Parallel Decoding},
   author    = {Amin Tafreshi, Rouzbeh and Fan, Jack and Mosca, Edoardo and Lechner, Mathias and Amini, Alexander},
-  booktitle = {NeurIPS 2026 Workshop on Beyond Next-Token Prediction (BeNTo)},
+  booktitle = {NeurIPS 2026 Workshop},
   year      = {2026}
 }
 ```
