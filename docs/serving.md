@@ -1,12 +1,12 @@
 # Serving with SGLang
 
-Block diffusion is served by Liquid AI's SGLang extension ([PR #3](https://github.com/Liquid4All/sglang-diffusion/pull/3)),
+Block diffusion is served by Liquid AI's SGLang extension, [sglang-diffusion-lfm](https://github.com/Liquid4All/sglang-diffusion-lfm),
 which adds the `DuoBlock` algorithm with fused kernels, CUDA graphs and continuous batching.
 
 ## Install
 
 ```bash
-git clone -b release https://github.com/Liquid4All/sglang-diffusion && cd sglang-diffusion
+git clone https://github.com/Liquid4All/sglang-diffusion-lfm && cd sglang-diffusion-lfm
 pip install -e "python"                                                         # NVIDIA
 mv python/pyproject_other.toml python/pyproject.toml && pip install -e "python[all_hip]"   # AMD
 ```

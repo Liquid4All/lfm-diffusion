@@ -2,7 +2,7 @@
   <img src="https://cdn-uploads.huggingface.co/production/uploads/61b8e2ba285851687028d395/2b08LKpev0DNEk6DlnWkY.png" alt="Liquid AI" width="100%"/>
   <p>
     <a href="https://huggingface.co/LiquidAI/lfm2.5-350m-diffusion-exp"><strong>Model</strong></a> •
-    <a href="https://github.com/Liquid4All/sglang-diffusion/pull/3"><strong>SGLang</strong></a> •
+    <a href="https://github.com/Liquid4All/sglang-diffusion-lfm"><strong>SGLang</strong></a> •
     <a href="https://docs.liquid.ai/lfm/getting-started/welcome"><strong>Docs</strong></a> •
     <a href="https://discord.com/invite/liquid-ai"><strong>Discord</strong></a>
   </p>
