@@ -4,6 +4,8 @@ set -euo pipefail
 PRESET="${1:-nfe8}"
 MODEL="${MODEL:-LiquidAI/lfm2.5-350m-diffusion-exp}"
 PORT="${PORT:-30000}"
+# The SGLang ROCm images enable AITER, which slows DuoBlock by ~30%; no effect on NVIDIA.
+export SGLANG_USE_AITER="${SGLANG_USE_AITER:-0}"
 CONFIG="$(cd "$(dirname "$0")/.." && pwd)/lfm_diffusion/decode_configs/${PRESET}.yaml"
 
 if [[ "${MODE:-throughput}" == "latency" ]]; then
