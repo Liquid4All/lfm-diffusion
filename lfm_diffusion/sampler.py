@@ -4,8 +4,8 @@ Usage: `from lfm_diffusion import load_model, generate` -- see scripts/generate.
 
 Decoding runs block by block on an answer-anchored grid: the prompt is the committed,
 token-causal context, and each new block of `block_size` tokens starts from uniform
-random tokens and is denoised with the uniform-state (DUO) ancestral posterior for
-`steps_per_block` steps, followed by one readout step. The block is then committed and
+random tokens and is denoised with the uniform-state (DUO) ancestral posterior in
+`steps_per_block` forward passes, the last one being the readout. The block is then committed and
 decoding moves on until an end-of-sequence token is produced.
 """
 
@@ -27,7 +27,7 @@ CONFIG_DIR = Path(__file__).parent / "decode_configs"
 class DecodeConfig:
     """Decoding parameters. The shipped presets live in `decode_configs/`."""
 
-    steps_per_block: int = 8          # denoising steps (NFE) per block, readout excluded
+    steps_per_block: int = 8          # forward passes (NFE) per block, readout included
     block_size: int = 32              # must match the checkpoint
     schedule: str = "rho"             # "rho" or "linear" time grid
     rho: float = 0.3                  # grid warp t = u**rho; < 1 spends more steps at low noise
@@ -46,7 +46,7 @@ class DecodeConfig:
     def temperature_at(self, step: int) -> float:
         if not self.temp_anneal:
             return self.temperature
-        frac = step / max(self.steps_per_block - 1, 1)
+        frac = step / max(self.steps_per_block - 2, 1)
         return self.temp_start + frac * (self.temp_end - self.temp_start)
 
     @property
@@ -93,8 +93,8 @@ def load_config(config: Union[str, Path, DecodeConfig, dict] = "nfe8") -> Decode
 
 
 def _time_grid(cfg: DecodeConfig, device) -> torch.Tensor:
-    """steps+1 times from 1 (pure noise) to eps (clean)."""
-    u = torch.linspace(1.0, 0.0, cfg.steps_per_block + 1, device=device)
+    """steps_per_block times from 1 (pure noise) to eps (clean)."""
+    u = torch.linspace(1.0, 0.0, cfg.steps_per_block, device=device)
     warped = u ** cfg.rho if cfg.schedule == "rho" else u
     return cfg.eps + (1.0 - cfg.eps) * warped
 
@@ -224,7 +224,7 @@ def generate_ids(
         x = canvas[:, :bend].clone()
         x[:, bstart:] = torch.randint(0, vocab_size, (1, bsz), device=device)
         sc = None
-        for i in range(cfg.steps_per_block):
+        for i in range(cfg.steps_per_block - 1):
             a_t, a_s = _alpha(ts[i], cfg.eps), _alpha(ts[i + 1], cfg.eps)
             logits = denoiser.logits(x, bstart, -a_t.clamp_min(1e-30).log(), sc)
             x[:, bstart:], log_x0 = _reverse_step(

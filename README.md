@@ -46,7 +46,7 @@ print(generate(model, tokenizer, messages, config="nfe8", max_new_tokens=256))
 
 ## Decoding
 
-`--nfe` sets the denoising steps per 32-token block. Fewer steps decode faster at some cost in quality.
+`--nfe` sets the forward passes per 32-token block, readout included. Fewer steps decode faster at some cost in quality.
 
 | Preset | Steps per block | Use |
 |---|---|---|
